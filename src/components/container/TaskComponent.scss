@@ -1,0 +1,21 @@
+
+
+.task{
+    font-weight: bold;
+    color:cadetblue;
+    
+}
+
+.task-action{
+    cursor: pointer;
+}
+
+.task-completed {
+    color: grey;
+    text-decoration: line-through;
+}
+
+.task-pending{
+    font-weight: bold;
+    color: tomato
+} ;
