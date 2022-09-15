@@ -13,9 +13,7 @@ const TaskListComponent = () => {
   const[pepe,setpepe]= useState(state.tasks)
   
   console.log(state.tasks,'hola1')
-  const adding= ()=>{
-  dispatch({type:ADD,payload:new Task("task4", "pepe", false, LEVEL.BLOCKING)})
-}
+  
 
   const [localState,setLocalState]=useState(state.tasks)
   
@@ -37,8 +35,9 @@ const TaskListComponent = () => {
 
   useEffect(() => {
       setIsLoading(false);
+      setLocalState(state.tasks)
     console.log('useEffect')
-      }, [localState]);
+      }, [dispatch,state.tasks,localState],);
   
 
   function completedTask(task){
@@ -59,7 +58,7 @@ const TaskListComponent = () => {
       const tempTask= [...localState];
     tempTask.push(task)
     dispatch({type:SET,payload:tempTask})
-    SetFilteredTasks(state.tasks)
+    
   }
   console.log(localState.length)
   const Table= ()=>{
@@ -130,9 +129,7 @@ const isLoadingStyle= {
           </div>
         </div>
       </div>
-        <button  onClick={adding}>
-          add task
-        </button>
+        
             {/* <TaskForm add={addTask} tasksLength={tasks.length}></TaskForm> */}
             <TaskFormik add={addTask} tasksLength={state.tasks.length}></TaskFormik>
     </div>
