@@ -10,14 +10,14 @@ import { miContexto } from '../../TaskContext/taskContext';
 const TaskListComponent = () => {
   const {state,dispatch,ADD,SET,DELETE,UPDATE}= useContext(miContexto)
 
-  const[pepe,setpepe]= useState(state.tasks)
+ 
   
   console.log(state.tasks,'hola1')
   
 
-  const [localState,setLocalState]=useState(state.tasks)
   
-  const [filteredTask,SetFilteredTasks] = useState(localState)
+  
+  const [filteredTask,SetFilteredTasks] = useState(state.tasks)
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -28,39 +28,39 @@ const TaskListComponent = () => {
     
     let selection= e.target.value
 
-    if(selection==='ALL') return SetFilteredTasks(localState) 
-    if(selection==='COMPLETED') return SetFilteredTasks( localState.filter(item=> item.completed === true))
-    if(selection==='PENDING') return SetFilteredTasks( localState.filter(item=> item.completed === false))
+    if(selection==='ALL') return SetFilteredTasks(state.tasks) 
+    if(selection==='COMPLETED') return SetFilteredTasks( state.tasks.filter(item=> item.completed === true))
+    if(selection==='PENDING') return SetFilteredTasks( state.tasks.filter(item=> item.completed === false))
   }
 
   useEffect(() => {
       setIsLoading(false);
-      setLocalState(state.tasks)
+      
     console.log('useEffect')
-      }, [dispatch,state.tasks,localState],);
+      }, [dispatch,state.tasks,filteredTask],);
   
 
   function completedTask(task){
-    const index= localState.indexOf(task);
-    const tempTask= [...localState];
+    const index= state.tasks.indexOf(task);
+    const tempTask= [...state.tasks];
     tempTask[index].completed= !tempTask[index].completed
     dispatch({type:SET,payload:tempTask});
   }
 
   function deleteTask(task){
    // console.log('delete this task', task)
-    const index= localState.indexOf(task);
-    const tempTask= [...localState];
+    const index= state.tasks.indexOf(task);
+    const tempTask= [...state.tasks];
     tempTask.splice(index,1)
     dispatch({type:SET,payload:tempTask})
   }
   function addTask(task){
-      const tempTask= [...localState];
+      const tempTask= [...state.tasks];
     tempTask.push(task)
     dispatch({type:SET,payload:tempTask})
     
   }
-  console.log(localState.length)
+  console.log(state.tasks.length)
   const Table= ()=>{
     return (
     <table>
@@ -89,7 +89,7 @@ const TaskListComponent = () => {
 
   let taskTable= <Table></Table>
 
-if (localState.length>0){ taskTable= <Table></Table> }
+if (state.tasks.length>0){ taskTable= <Table></Table> }
 else {taskTable= <div style={{display: 'flex', flexDirection: 'column',
   textAlign: 'center'}}> <h3>there is no tasks</h3>
 <h6>Please, create one</h6>
