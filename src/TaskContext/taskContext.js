@@ -13,9 +13,13 @@ export default function MiComponenteConContexto({children}) {
      const ADD = 'INCREMENT';
      const DELETE = 'DECREMENT';
      const UPDATE = 'RESET';
+     const FILTER = 'FILTER';
     
     // Initial State for Reducer
-    const initialState = {tasks: [defaultTask1, defaultTask2, defaultTask3 ]}
+    const initialState = {
+        tasks: [defaultTask1, defaultTask2, defaultTask3 ],
+        tasksCopy : [defaultTask1, defaultTask2, defaultTask3 ]
+    }
 
     // Reducer to change State
     const reducer = (state, action) => {
@@ -30,15 +34,29 @@ export default function MiComponenteConContexto({children}) {
             case ADD:
                 return {
                     ...state,
-                    tasks: [...state.tasks,action.payload]
+                    tasks: [...state.tasksCopy,action.payload],
+                    tasksCopy:[...state.tasksCopy,action.payload]
                 }
-            case DELETE:
+            case FILTER:
+                console.log(action.payload)
+               let filteredSate= []
+               if(action.payload==='ALL') filteredSate= state.tasksCopy
+               if(action.payload==='COMPLETED') filteredSate= state.tasksCopy.filter(item=> item.completed === true)
+               if(action.payload==='PENDING')filteredSate=state.tasksCopy.filter(item=> item.completed === false)
+
                 return {
+                    ...state,
+                    tasks: filteredSate
+
                     
                 }
-            case UPDATE:
+            case DELETE:
+                console.log(action.payload.name)
+                let deleteSate= state.tasksCopy.filter(item=> item.name !== action.payload.name)
+                
                 return {
-                   
+                   tasks: deleteSate,
+                   tasksCopy: deleteSate
                 }
             default:
                 return state;
@@ -51,7 +69,7 @@ export default function MiComponenteConContexto({children}) {
     
  return (
 
-    <miContexto.Provider value={{state,dispatch,ADD,SET,DELETE,UPDATE}}> {children} </miContexto.Provider>
+    <miContexto.Provider value={{state,dispatch,FILTER,ADD,SET,DELETE,UPDATE}}> {children} </miContexto.Provider>
 
   )
 }

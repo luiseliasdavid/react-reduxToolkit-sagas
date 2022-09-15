@@ -8,14 +8,7 @@ import {Task} from '../models/task.class'
 import { miContexto } from '../../TaskContext/taskContext';
 
 const TaskListComponent = () => {
-  const {state,dispatch,ADD,SET,DELETE,UPDATE}= useContext(miContexto)
-
- 
-  
-  console.log(state.tasks,'hola1')
-  
-
-  
+  const {state,dispatch,FILTER,SET,DELETE}= useContext(miContexto)
   
   const [filteredTask,SetFilteredTasks] = useState(state.tasks)
 
@@ -23,21 +16,17 @@ const TaskListComponent = () => {
 
   
 
-    const filter= (e)=>{
-    e.preventDefault();
-    
-    let selection= e.target.value
+    const filter = (e) => {
+      e.preventDefault();
 
-    if(selection==='ALL') return SetFilteredTasks(state.tasks) 
-    if(selection==='COMPLETED') return SetFilteredTasks( state.tasks.filter(item=> item.completed === true))
-    if(selection==='PENDING') return SetFilteredTasks( state.tasks.filter(item=> item.completed === false))
-  }
+      let selection = e.target.value;
+
+      dispatch({ type: FILTER, payload: selection });
+    };
 
   useEffect(() => {
       setIsLoading(false);
-      
-    console.log('useEffect')
-      }, [dispatch,state.tasks,filteredTask],);
+    }, [dispatch,state.tasks,filteredTask],);
   
 
   function completedTask(task){
@@ -48,11 +37,7 @@ const TaskListComponent = () => {
   }
 
   function deleteTask(task){
-   // console.log('delete this task', task)
-    const index= state.tasks.indexOf(task);
-    const tempTask= [...state.tasks];
-    tempTask.splice(index,1)
-    dispatch({type:SET,payload:tempTask})
+    dispatch({type:DELETE,payload:task})
   }
   function addTask(task){
       const tempTask= [...state.tasks];
@@ -60,7 +45,7 @@ const TaskListComponent = () => {
     dispatch({type:SET,payload:tempTask})
     
   }
-  console.log(state.tasks.length)
+  //console.log(state.tasks.length)
   const Table= ()=>{
     return (
     <table>
@@ -74,7 +59,7 @@ const TaskListComponent = () => {
     </thead>
 
     <tbody>
-      {filteredTask?.map((task, index) => (
+      {state.tasks?.map((task, index) => (
         <TaskComponent 
         key={index} 
         task={task} 
